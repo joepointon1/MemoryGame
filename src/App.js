@@ -3,6 +3,16 @@ export default function App() {
   const noTiles = 16;
   const [answer1, setAnswer1] = useState(null);
   const [answer2, setAnswer2] = useState(null);
+  // array filled with false, values change to true if those tiles have been correctly guessed
+  const [usersAnswers, setUsersAnswers] = useState(
+    Array(Math.sqrt(noTiles))
+      .fill(false)
+      .map(() => Array(Math.sqrt(noTiles)).fill(false))
+  );
+
+  useEffect(() => {
+    console.log("usersAnswers:", usersAnswers);
+  }, [usersAnswers]);
 
   const answers = [
     [0, 1, 2, 3],
@@ -11,16 +21,12 @@ export default function App() {
     [8, 7, 6, 5],
   ];
 
-  // array filled with false, values change to true if those tiles have been correctly guessed
-  const usersAnswers = Array(Math.sqrt(noTiles))
-    .fill(false)
-    .map(() => Array(Math.sqrt(noTiles)).fill(false));
-
   function BoardTile({ id }) {
     const x = id % Math.sqrt(noTiles);
     const y = Math.floor(id / Math.sqrt(noTiles));
+    const classes = `board-tile ${usersAnswers[y][x]? "board-tile-selected": ""}`
     return (
-      <div className="board-tile" onClick={() => handleClick(x, y)}>
+      <div className={classes} onClick={() => handleClick(x, y)}>
         {answers[y][x]}
       </div>
     );
@@ -43,15 +49,21 @@ export default function App() {
   }
 
   function verifyAnswers() {
-    if(answers[answer1[1]][answer1[0]] === answers[answer2[1]][answer2[0]]){
-      console.log(true)
-    }else{
+    if (answers[answer1[1]][answer1[0]] === answers[answer2[1]][answer2[0]]) {
+      console.log(true);
+      setUsersAnswers((prev) => {
+        prev[answer1[1]][answer1[0]] = true;
+        prev[answer2[1]][answer2[0]] = true;
+        console.log(prev)
+        return prev;
+      });
+    } else {
       console.log(false);
-    } 
+    }
+
     setAnswer1(null);
     setAnswer2(null);
   }
-
 
   useEffect(() => {
     // verify answers once second answer has been set in state
