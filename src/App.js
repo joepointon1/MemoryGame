@@ -3,6 +3,7 @@ export default function App() {
   const noTiles = 16;
   const [answer1, setAnswer1] = useState(null);
   const [answer2, setAnswer2] = useState(null);
+  const [visibilityTimeout, setVisibilityTimeout] = useState(null);
   // array filled with false, values change to true if those tiles have been correctly guessed
   const [usersAnswers, setUsersAnswers] = useState(
     Array(Math.sqrt(noTiles))
@@ -11,8 +12,8 @@ export default function App() {
   );
 
   useEffect(() => {
-    console.log("usersAnswers:", usersAnswers);
-  }, [usersAnswers]);
+    console.log("visibilityTimeout:", visibilityTimeout);
+  }, [visibilityTimeout]);
 
   const answers = [
     [0, 1, 2, 3],
@@ -24,10 +25,26 @@ export default function App() {
   function BoardTile({ id }) {
     const x = id % Math.sqrt(noTiles);
     const y = Math.floor(id / Math.sqrt(noTiles));
-    const classes = `board-tile ${usersAnswers[y][x]? "board-tile-selected": ""}`
+    const divClasses = `board-tile ${
+      usersAnswers[y][x] ? "board-tile-correct" : ""
+    }`;
+
+    let h1Class;
+    if (answer1) {
+      if (answer1[0] === x && answer1[1] == y) {
+        h1Class = "visible";
+      }
+    }
+    if (answer2) {
+      if (answer2[0] === x && answer2[1] == y) {
+        h1Class = "visible";
+      }
+    }
+    if (usersAnswers[y][x]) h1Class = "visible";
+
     return (
-      <div className={classes} onClick={() => handleClick(x, y)}>
-        {answers[y][x]}
+      <div className={divClasses} onClick={() => handleClick(x, y)}>
+        <h2 className={h1Class}>{answers[y][x]}</h2>
       </div>
     );
   }
@@ -39,6 +56,9 @@ export default function App() {
   }
 
   function handleClick(x, y) {
+    if (visibilityTimeout) {
+      return;
+    }
     if (!answer1) {
       setAnswer1([x, y]);
     } else {
@@ -54,21 +74,26 @@ export default function App() {
       setUsersAnswers((prev) => {
         prev[answer1[1]][answer1[0]] = true;
         prev[answer2[1]][answer2[0]] = true;
-        console.log(prev)
+        console.log(prev);
         return prev;
       });
     } else {
       console.log(false);
     }
-
-    setAnswer1(null);
-    setAnswer2(null);
   }
 
   useEffect(() => {
     // verify answers once second answer has been set in state
     if (answer2) {
       verifyAnswers();
+
+      setVisibilityTimeout(
+        setTimeout(() => {
+          setAnswer1(null);
+          setAnswer2(null);
+          setVisibilityTimeout(null);
+        }, 1000)
+      );
     }
   }, [answer2]);
 

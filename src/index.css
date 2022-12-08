@@ -41,6 +41,14 @@ html, body {
     cursor:pointer;
 }
 
-.board-tile-selected{
+.board-tile-correct{
   background-color:burlywood;
+}
+
+h2{
+  visibility: hidden
+}
+
+h2.visible{
+  visibility:visible
 }
