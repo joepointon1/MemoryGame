@@ -6,9 +6,9 @@ export default function App() {
   const [visibilityTimeout, setVisibilityTimeout] = useState(null);
   const [p1Score, setP1Score] = useState(0);
   const [p2Score, setP2Score] = useState(0);
-  
-  // false for player 1, true for player 2
+  const [correctTilesNo, setCorrectTilesNo] = useState(0);
   const [player1Turn, setPlayer1Turn] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
   // array filled with false, values change to true if those tiles have been correctly guessed
   const [usersAnswers, setUsersAnswers] = useState(
     Array(Math.sqrt(noTiles))
@@ -64,6 +64,9 @@ export default function App() {
     if (visibilityTimeout) {
       return;
     }
+    if (gameOver) {
+      return;
+    }
     if (!answer1) {
       setAnswer1([x, y]);
     } else {
@@ -87,6 +90,7 @@ export default function App() {
         console.log(prev);
         return prev;
       });
+      setCorrectTilesNo((prev) => (prev += 1));
     } else {
       console.log(false);
     }
@@ -108,25 +112,65 @@ export default function App() {
     }
   }, [answer2]);
 
-  useEffect(()=>{
-    
-  },usersAnswers)
+  useEffect(() => {
+    console.log("tiles   :", correctTilesNo);
+    if (correctTilesNo * 2 === noTiles) {
+      setGameOver(true);
+    }
+  }, [correctTilesNo]);
+
+  function setHeaderText() {
+    return player1Turn ? "Player 1's turn" : "Player 2's turn";
+  }
+
+  function setHeaderClass() {
+    return player1Turn ? "player-turn p1-colour" : "player-turn p2-colour";
+  }
+
+  function setGameOverText() {
+    return p1Score === p2Score
+      ? "It's a draw"
+      : p1Score > p2Score
+      ? "!!! Player 1 wins !!!"
+      : "!!! Player 2 wins !!!";
+  }
+
+  function setGameOverClass() {
+    return p1Score === p2Score
+      ? "player-turn"
+      : p1Score > p2Score
+      ? "player-turn p1-colour"
+      : "player-turn p2-colour";
+  }
+
+  function restartGame() {
+    setP1Score(0)
+    setP2Score(0)
+    setGameOver(false)
+    setCorrectTilesNo(0)
+    setPlayer1Turn(true)
+    setUsersAnswers( Array(Math.sqrt(noTiles))
+    .fill(false)
+    .map(() => Array(Math.sqrt(noTiles)).fill(false)))
+  }
   return (
     <>
       <div className="title-container">
-        
         <h1>Sqaure Guesser Game</h1>
-        <h3
-          className={
-            player1Turn ? "player-turn score-1" : "player-turn score-2"
-          }
-        >
-          Player {player1Turn ? 1 : 2}'s turn
-        </h3>
+        {!gameOver && <h3 className={setHeaderClass()}>{setHeaderText()}</h3>}
+        {gameOver && (
+          <h3 className={setGameOverClass()}>{setGameOverText()}</h3>
+        )}
         <div className="score-container">
-          <h3 className="score-1">P1 Score: {p1Score}</h3>
-          <h3 className="score-2">P2 Score: {p2Score}</h3>
+          <h3 className="p1-colour">P1 Score: {p1Score}</h3>
+          <h3 className="p2-colour">P2 Score: {p2Score}</h3>
         </div>
+        {gameOver && (
+          <>
+            <div>Gameover</div>{" "}
+            <button onClick={restartGame}>Restart?</button>
+          </>
+        )}
       </div>
       <div className="board-container">{renderTiles(noTiles)}</div>
     </>

@@ -57,17 +57,18 @@ h3{
   margin:6px;
   padding:4px;
 }
-.score-1{
-  background-color: #1ed26988;
-}
-.score-2{
-background-color: #691ed279;
 
-}
 .player-turn{
   width:100%;
   text-align: center;
+  background-color: #d2691e;
   
+}
+.p2-colour {
+  background-color: #1ed26988;
+}
+.p1-colour{
+background-color: #691ed279;
 }
 .title-container {
   width: 50vw;
