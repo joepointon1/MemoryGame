@@ -1,13 +1,13 @@
 body {
-  
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -16,39 +16,72 @@ html, body {
   box-sizing: border-box;
 }
 
-.board-container{
+.board-container {
   display: flex;
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
   padding: 5px;
-  background-color: bisque;
+  background-color: #ffe4c4;
   margin: 0 auto;
   flex-direction: row;
   width: 50vw;
   height: 50vw;
 }
 
-.board-tile{
+.board-tile {
   display: flex;
-    background-color: chocolate;
-    margin: 1%;
-    text-align: center;
-    width: 23%;
-    height: 23%;
-    justify-content: center;
-    align-items: center;
-    cursor:pointer;
+  background-color: #d2691e;
+  margin: 1%;
+  text-align: center;
+  width: 23%;
+  height: 23%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
-.board-tile-correct{
-  background-color:burlywood;
+.board-tile-correct {
+  background-color: burlywood;
 }
 
-h2{
-  visibility: hidden
+h2 {
+  visibility: hidden;
 }
 
-h2.visible{
-  visibility:visible
+h2.visible {
+  visibility: visible;
+}
+
+h3{
+  margin:6px;
+  padding:4px;
+}
+.score-1{
+  background-color: #1ed26988;
+}
+.score-2{
+background-color: #691ed279;
+
+}
+.player-turn{
+  width:100%;
+  text-align: center;
+  
+}
+.title-container {
+  width: 50vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title-container h1 {
+  align-self: center;
+}
+
+.score-container{
+  display: flex;
+  flex-direction: row;
+    justify-content: space-around;
 }
