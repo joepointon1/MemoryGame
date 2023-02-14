@@ -109,9 +109,9 @@ export default function App() {
         return prev;
       });
       setCorrectTilesNo((prev) => (prev += 1));
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
@@ -125,7 +125,7 @@ export default function App() {
           setAnswer1(null);
           setAnswer2(null);
           setVisibilityTimeout(null);
-          setPlayer1Turn((prev) => !correctTurn? !prev: prev);
+          setPlayer1Turn((prev) => (!correctTurn ? !prev : prev));
         }, 1000)
       );
     }
@@ -175,13 +175,17 @@ export default function App() {
     );
   }
   return (
-    <>
-      <div className="title-container">
-        <h1>Sqaure Guesser Game</h1>
-        {!gameOver && <h3 className={setHeaderClass()}>{setHeaderText()}</h3>}
-        {gameOver && (
-          <h3 className={setGameOverClass()}>{setGameOverText()}</h3>
-        )}
+    <div className="container">
+      <div className="header-container">
+        <h1>Memory Guesser Game</h1>
+        <div className="turn-container">
+          {gameOver ? (
+            <h3 className={setGameOverClass()}>{setGameOverText()}</h3>
+          ) : (
+            <h3 className={setHeaderClass()}>{setHeaderText()}</h3>
+          )}
+        </div>
+
         <div className="score-container">
           <h3 className="p1-colour">P1 Score: {p1Score}</h3>
           <h3 className="p2-colour">P2 Score: {p2Score}</h3>
@@ -193,6 +197,6 @@ export default function App() {
         )}
       </div>
       {answers && <div className="board-container">{renderTiles(noTiles)}</div>}
-    </>
+    </div>
   );
 }
