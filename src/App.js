@@ -10,7 +10,7 @@ export default function App() {
   const [p2Score, setP2Score] = useState(0);
   const [correctTilesNo, setCorrectTilesNo] = useState(0);
   const [player1Turn, setPlayer1Turn] = useState(true);
-  const [gameOver, setGameOver] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
   const [answers, setAnswers] = useState();
 
   // array filled with false, values change to true if those tiles have been correctly guessed
@@ -19,17 +19,6 @@ export default function App() {
       .fill(false)
       .map(() => Array(Math.sqrt(noTiles)).fill(false))
   );
-
-  useEffect(() => {
-    // console.log("visibilityTimeout:", visibilityTimeout);
-  }, [visibilityTimeout]);
-
-  // const answers = [
-  //   [0, 1, 2, 3],
-  //   [4, 5, 6, 7],
-  //   [3, 2, 1, 0],
-  //   [7, 6, 5, 4],
-  // ];
 
   useEffect(() => {
     generateAnswers();
@@ -58,7 +47,6 @@ export default function App() {
         counter += 1;
       }
     }
-    console.log(answersArray);
     setAnswers(answersArray);
   }
 
@@ -105,7 +93,6 @@ export default function App() {
       setUsersAnswers((prev) => {
         prev[answer1[1]][answer1[0]] = true;
         prev[answer2[1]][answer2[0]] = true;
-        console.log(prev);
         return prev;
       });
       setCorrectTilesNo((prev) => (prev += 1));
@@ -132,7 +119,6 @@ export default function App() {
   }, [answer2]);
 
   useEffect(() => {
-    // console.log("tiles   :", correctTilesNo);
     if (correctTilesNo * 2 === noTiles) {
       setGameOver(true);
     }
@@ -195,11 +181,6 @@ export default function App() {
           <h3 className="p1-colour">P1 Score: {p1Score}</h3>
           <h3 className="p2-colour">P2 Score: {p2Score}</h3>
         </div>
-        {/* {gameOver && (
-          <>
-            <div>Gameover</div> <button onClick={restartGame}>Restart?</button>
-          </>
-        )} */}
       </div>
       {answers && <div className="board-container">{renderTiles(noTiles)}</div>}
     </div>
