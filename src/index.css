@@ -74,6 +74,9 @@ h3 {
 .p1-colour {
   background-color: #691ed279;
 }
+.clickable{
+  cursor: pointer;
+}
 .header-container {
   margin: 0 auto;
   display: flex;

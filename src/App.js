@@ -10,7 +10,7 @@ export default function App() {
   const [p2Score, setP2Score] = useState(0);
   const [correctTilesNo, setCorrectTilesNo] = useState(0);
   const [player1Turn, setPlayer1Turn] = useState(true);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameOver, setGameOver] = useState(true);
   const [answers, setAnswers] = useState();
 
   // array filled with false, values change to true if those tiles have been correctly guessed
@@ -180,7 +180,12 @@ export default function App() {
         <h1>Memory Guesser Game</h1>
         <div className="turn-container">
           {gameOver ? (
-            <h3 className={setGameOverClass()}>{setGameOverText()}</h3>
+            <h3
+              className={setGameOverClass() + " clickable"}
+              onClick={() => restartGame()}
+            >
+              {setGameOverText() + "    Click to reset"}
+            </h3>
           ) : (
             <h3 className={setHeaderClass()}>{setHeaderText()}</h3>
           )}
@@ -190,11 +195,11 @@ export default function App() {
           <h3 className="p1-colour">P1 Score: {p1Score}</h3>
           <h3 className="p2-colour">P2 Score: {p2Score}</h3>
         </div>
-        {gameOver && (
+        {/* {gameOver && (
           <>
             <div>Gameover</div> <button onClick={restartGame}>Restart?</button>
           </>
-        )}
+        )} */}
       </div>
       {answers && <div className="board-container">{renderTiles(noTiles)}</div>}
     </div>
