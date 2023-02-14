@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import BoardTile from "./components/BoardTile";
+
 export default function App() {
   const noTiles = 16;
   const [answer1, setAnswer1] = useState(null);
@@ -9,6 +11,8 @@ export default function App() {
   const [correctTilesNo, setCorrectTilesNo] = useState(0);
   const [player1Turn, setPlayer1Turn] = useState(true);
   const [gameOver, setGameOver] = useState(false);
+  const [answers, setAnswers] = useState();
+
   // array filled with false, values change to true if those tiles have been correctly guessed
   const [usersAnswers, setUsersAnswers] = useState(
     Array(Math.sqrt(noTiles))
@@ -17,47 +21,62 @@ export default function App() {
   );
 
   useEffect(() => {
-    console.log("visibilityTimeout:", visibilityTimeout);
+    // console.log("visibilityTimeout:", visibilityTimeout);
   }, [visibilityTimeout]);
 
-  const answers = [
-    [0, 1, 2, 3],
-    [5, 6, 7, 8],
-    [3, 2, 1, 0],
-    [8, 7, 6, 5],
-  ];
+  // const answers = [
+  //   [0, 1, 2, 3],
+  //   [4, 5, 6, 7],
+  //   [3, 2, 1, 0],
+  //   [7, 6, 5, 4],
+  // ];
 
-  function BoardTile({ id }) {
-    const x = id % Math.sqrt(noTiles);
-    const y = Math.floor(id / Math.sqrt(noTiles));
-    const divClasses = `board-tile ${
-      usersAnswers[y][x] ? "board-tile-correct" : ""
-    }`;
+  useEffect(() => {
+    generateAnswers();
+  }, []);
 
-    let h1Class;
-    if (answer1) {
-      if (answer1[0] === x && answer1[1] == y) {
-        h1Class = "visible";
+  function generateAnswers() {
+    let answersArray = [];
+    answersArray = Array(Math.sqrt(noTiles))
+      .fill("")
+      .map(() => Array(Math.sqrt(noTiles)).fill(""));
+
+    const possibleDigits = [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7];
+    let randomDigits = [];
+    // randomly order numbers
+    for (let i = 0; i < noTiles; i++) {
+      let digit = Math.floor(Math.random() * (15 - i));
+      randomDigits.push(possibleDigits[digit]);
+      possibleDigits.splice(digit, 1);
+    }
+
+    // put numbers in 2d array
+    let counter = 0;
+    for (let i = 0; i < Math.sqrt(noTiles); i++) {
+      for (let j = 0; j < Math.sqrt(noTiles); j++) {
+        answersArray[i][j] = randomDigits[counter];
+        counter += 1;
       }
     }
-    if (answer2) {
-      if (answer2[0] === x && answer2[1] == y) {
-        h1Class = "visible";
-      }
-    }
-    if (usersAnswers[y][x]) h1Class = "visible";
-
-    return (
-      <div className={divClasses} onClick={() => handleClick(x, y)}>
-        <h2 className={h1Class}>{answers[y][x]}</h2>
-      </div>
-    );
+    console.log(answersArray);
+    setAnswers(answersArray);
   }
 
   function renderTiles(count) {
     return Array(count)
       .fill(0)
-      .map((v, i) => <BoardTile key={i} id={i} />);
+      .map((v, i) => (
+        <BoardTile
+          key={i}
+          id={i}
+          noTiles={noTiles}
+          usersAnswers={usersAnswers}
+          answer1={answer1}
+          answer2={answer2}
+          handleClick={handleClick}
+          answers={answers}
+        />
+      ));
   }
 
   function handleClick(x, y) {
@@ -113,7 +132,7 @@ export default function App() {
   }, [answer2]);
 
   useEffect(() => {
-    console.log("tiles   :", correctTilesNo);
+    // console.log("tiles   :", correctTilesNo);
     if (correctTilesNo * 2 === noTiles) {
       setGameOver(true);
     }
@@ -144,14 +163,16 @@ export default function App() {
   }
 
   function restartGame() {
-    setP1Score(0)
-    setP2Score(0)
-    setGameOver(false)
-    setCorrectTilesNo(0)
-    setPlayer1Turn(true)
-    setUsersAnswers( Array(Math.sqrt(noTiles))
-    .fill(false)
-    .map(() => Array(Math.sqrt(noTiles)).fill(false)))
+    setP1Score(0);
+    setP2Score(0);
+    setGameOver(false);
+    setCorrectTilesNo(0);
+    setPlayer1Turn(true);
+    setUsersAnswers(
+      Array(Math.sqrt(noTiles))
+        .fill(false)
+        .map(() => Array(Math.sqrt(noTiles)).fill(false))
+    );
   }
   return (
     <>
@@ -167,12 +188,11 @@ export default function App() {
         </div>
         {gameOver && (
           <>
-            <div>Gameover</div>{" "}
-            <button onClick={restartGame}>Restart?</button>
+            <div>Gameover</div> <button onClick={restartGame}>Restart?</button>
           </>
         )}
       </div>
-      <div className="board-container">{renderTiles(noTiles)}</div>
+      {answers && <div className="board-container">{renderTiles(noTiles)}</div>}
     </>
   );
 }
