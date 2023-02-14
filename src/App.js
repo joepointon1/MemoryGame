@@ -97,7 +97,6 @@ export default function App() {
 
   function verifyAnswers() {
     if (answers[answer1[1]][answer1[0]] === answers[answer2[1]][answer2[0]]) {
-      console.log(true);
       if (player1Turn) {
         setP1Score((prev) => prev + 1);
       } else {
@@ -110,22 +109,23 @@ export default function App() {
         return prev;
       });
       setCorrectTilesNo((prev) => (prev += 1));
+      return true
     } else {
-      console.log(false);
+      return false
     }
   }
 
   useEffect(() => {
     // verify answers once second answer has been set in state
     if (answer2) {
-      verifyAnswers();
+      let correctTurn = verifyAnswers();
 
       setVisibilityTimeout(
         setTimeout(() => {
           setAnswer1(null);
           setAnswer2(null);
           setVisibilityTimeout(null);
-          setPlayer1Turn((prev) => !prev);
+          setPlayer1Turn((prev) => !correctTurn? !prev: prev);
         }, 1000)
       );
     }
